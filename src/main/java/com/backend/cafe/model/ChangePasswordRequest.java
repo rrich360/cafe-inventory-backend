@@ -1,0 +1,16 @@
+package com.backend.cafe.model;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Builder
+public class ChangePasswordRequest {
+
+    private String currentPassword;
+    private String currentUsername;
+    private String newPassword;
+    private String confirmPassword;
+}
