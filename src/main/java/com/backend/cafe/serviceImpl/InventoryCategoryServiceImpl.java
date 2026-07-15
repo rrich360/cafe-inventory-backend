@@ -83,6 +83,23 @@ public class InventoryCategoryServiceImpl implements InventoryCategoryService {
     }
 
     @Override
+    public ResponseEntity<String> updateCategory(Map<String, String> requestMap) {
+        try {
+            if (jwtFilter.isAdmin()) {
+                if (validateInventoryCategoryMap(requestMap, true)) {
+                    inventoryCategoryDao.save(getInventoryCategoryFromMap(requestMap, true));
+                    return CafeUtils.getResponseEntity("Category Updated Successfully.", HttpStatus.OK);
+                }
+                return CafeUtils.getResponseEntity(CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
+            }
+            return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
     public ResponseEntity<List<InventoryCategory>> getAllInventoryCategories(String filterValue) {
         try {
             if (!Strings.isEmpty(filterValue) && filterValue.equalsIgnoreCase("true")){

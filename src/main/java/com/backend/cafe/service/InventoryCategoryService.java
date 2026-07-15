@@ -14,4 +14,6 @@ public interface InventoryCategoryService {
 
     ResponseEntity<String> deleteCategory(Integer id);
 
+    ResponseEntity<String> updateCategory(Map<String, String> requestMap);
+
 }

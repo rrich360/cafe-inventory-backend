@@ -16,6 +16,9 @@ public interface InventoryCategoryRest {
     @GetMapping(path = "/get")
     ResponseEntity<List<InventoryCategory>> getAllInventoryCategories(@RequestParam(required = false) String filterValue);
 
+    @PostMapping(path = "/update")
+    ResponseEntity<String> updateCategory(@RequestBody Map<String, String> requestMap);
+
     @PostMapping(path = "/delete/{id}")
     ResponseEntity<String> deleteCategory(@PathVariable Integer id);
 
