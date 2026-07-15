@@ -1,6 +1,7 @@
 package com.backend.cafe.rest;
 
 import com.backend.cafe.model.ChangePasswordRequest;
+import com.backend.cafe.model.ForgotPasswordRequest;
 import com.backend.cafe.model.User;
 import com.backend.cafe.wrapper.UserWrapper;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,9 @@ public interface UserRest {
 
     @PostMapping(path = "/api/register")
     ResponseEntity<String> register(@RequestBody(required = true) Map<String, String> requestMap);
+
+    @PostMapping(path = "/api/forgot_password")
+    ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request);
 
 
     @PostMapping(path = "/update")

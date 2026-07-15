@@ -2,6 +2,7 @@ package com.backend.cafe.restImpl;
 
 import com.backend.cafe.constants.CafeConstants;
 import com.backend.cafe.model.ChangePasswordRequest;
+import com.backend.cafe.model.ForgotPasswordRequest;
 import com.backend.cafe.model.User;
 import com.backend.cafe.rest.UserRest;
 import com.backend.cafe.serviceImpl.UserServiceImpl;
@@ -28,6 +29,16 @@ public class UserRestImpl implements UserRest {
 public ResponseEntity<String> register(Map<String, String> requestMap){
     try {
         return userServiceImpl.register(requestMap);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+}
+
+@Override
+public ResponseEntity<String> forgotPassword(ForgotPasswordRequest request) {
+    try {
+        return userServiceImpl.forgotPassword(request);
     } catch (Exception e) {
         e.printStackTrace();
     }

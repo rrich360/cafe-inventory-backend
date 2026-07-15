@@ -4,6 +4,7 @@ import com.backend.cafe.config.JwtFilter;
 import com.backend.cafe.constants.CafeConstants;
 import com.backend.cafe.dao.UserDao;
 import com.backend.cafe.model.ChangePasswordRequest;
+import com.backend.cafe.model.ForgotPasswordRequest;
 import com.backend.cafe.model.User;
 import com.backend.cafe.config.JWTService;
 import com.backend.cafe.service.UserService;
@@ -207,6 +208,28 @@ private User getUserFromMap(Map<String, String> requestMap){
         user.setPassword(encoder.encode(request.getNewPassword()));
         // save the new password
         userDao.save(user);
+    }
+
+    // Interim identity check (username + mobile number) for users who aren't logged in and
+    // don't know their current password. Mobile number isn't a strong secret, so this is a
+    // stopgap -- planned to be replaced with a real email-based reset (AWS SES) later in the series.
+    @Override
+    public ResponseEntity<String> forgotPassword(ForgotPasswordRequest request) {
+        try {
+            if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+                return CafeUtils.getResponseEntity("New Password and Confirm Password do not match.", HttpStatus.BAD_REQUEST);
+            }
+            User user = userDao.findByUsername(request.getUsername());
+            if (user == null || !user.getMobileNumber().equals(request.getMobileNumber())) {
+                return CafeUtils.getResponseEntity("Username and mobile number do not match our records.", HttpStatus.BAD_REQUEST);
+            }
+            user.setPassword(encoder.encode(request.getNewPassword()));
+            userDao.save(user);
+            return CafeUtils.getResponseEntity("Password reset successfully. Please sign in with your new password.", HttpStatus.OK);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 //
